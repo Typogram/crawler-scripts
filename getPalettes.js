@@ -9,17 +9,35 @@
 // @grant        none
 // ==/UserScript==
 
-/* 
-This script is designed to crawl the 'Most Loved' palettes page on ColourLovers, 
-aggregate palette data, and save it to a local indexedDB. It works with TamperMonkey,
-a Chrome extension, allowing it to navigate through pagination and download data.
-The script includes:
-- updateDetailsArray: Fetches and processes palette information from the current page.
-- rgbToHex: Converts RGB color format to Hex format.
-- goToNextPage: Navigates to the next page in the palette list by simulating a click on the 'Next' button.
-- processPage: Processes the current page, updates details array with current page's palettes, and navigates to the next page.
-- Initial setup: Calls processPage after a set delay to ensure page content is loaded. 
-*/
+/**
+ * Script for Extracting Palette Data from ColourLovers
+ *
+ * Description:
+ * This script is specifically written to run on the 'Most Loved' palettes page of ColourLovers.
+ * URL: https://www.colourlovers.com/palettes/most-loved/all-time/meta
+ *
+ * Usage:
+ * The script is designed to be used with the Tampermonkey extension in a web browser.
+ * It automatically loops through the pagination of the specified URL,
+ * extracting data from each page and storing it in the browser's localStorage.
+ *
+ * Functionality:
+ * - updateDetailsArray: Extracts palette details such as favorite number and color hex values from each palette displayed on the page.
+ * - rgbToHex: Converts RGB color values to Hexadecimal format.
+ * - goToNextPage: Automatically navigates to the next page in the pagination.
+ * - processPage: Processes the current page to extract palette details and then navigates to the next page.
+ * - The script initially triggers the processPage function after a 2000ms delay to ensure that the page's content is fully loaded.
+ *
+ * Data Storage:
+ * The extracted palette details are stored in the browser's localStorage in an array format.
+ * Each entry includes the favorite count and the array of color hex values for the respective palette.
+ *
+ * Note:
+ * The script relies on the specific structure of the ColourLovers website.
+ * Any changes in the website's layout or class names may require updates to the script.
+ * The script is designed to handle unique palettes only, avoiding duplicates in the storage.
+ */
+
 
 (function() {
     'use strict';

@@ -140,6 +140,6 @@
 
     setTimeout(function() {
         processPage();
-    }, 2000);
+    }, 500);
 
 })();

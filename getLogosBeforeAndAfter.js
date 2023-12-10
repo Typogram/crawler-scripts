@@ -1,10 +1,10 @@
 // ==UserScript==
-// @name         Extract Brand New Archive Data
+// @name         getLogosBeforeAndAfter.js
 // @namespace    http://tampermonkey.net/
 // @version      2023-12-10
 // @description  Automatically extracts and saves logo and branding project data from Brand New's archive pages.
 // @author       You
-// @match        https://www.underconsideration.com/brandnew/*
+// @match        https://www.underconsideration.com/brandnew/archives/category/type/before_after/*
 // @icon         https://www.google.com/s2/favicons?sz=64&domain=underconsideration.com
 // @grant        none
 // ==/UserScript==
@@ -81,7 +81,7 @@
         } else if (imageTagSrc) {
             imageURL = imageTagSrc;
         }
-        
+
         const websiteURL = gridItem.querySelector('a').getAttribute('href');
         const title = gridItem.querySelector('.title h1')?.textContent.trim();
 

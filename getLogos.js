@@ -28,64 +28,99 @@
  * Any changes in the website's HTML structure may require adjustments to the script.
  */
 
+(function() {
+    'use strict';
 
-// Function to extract data from each 'grid-item' element
-function extractDataFromGridItem(gridItem) {
-    const websiteURL = gridItem.querySelector('a').getAttribute('href');
-    const imageURL = gridItem.querySelector('.lead_image_image').style.backgroundImage.slice(5, -2); // removes 'url("...")' wrapper
-    const title = gridItem.querySelector('.title h1')?.textContent.trim();
+    function updateLogosArray() {
+        // Retrieve the stored logos array from localStorage, or create a new one if it doesn't exist
+        var logosArray = JSON.parse(localStorage.getItem('logos')) || [];
+        var itemsAdded = 0; // Counter for the number of items added from this page
 
-    // Extract and clean subTitle (remove unwanted characters like '\n' and numbers at the end)
-    let subTitle = gridItem.querySelector('.title h2')?.textContent.trim();
-    subTitle = subTitle.replace(/[\n\d]+$/, '').trim(); // Removes newline and trailing numbers
+        const gridItems = document.querySelectorAll('.grid-item');
 
-    // Extract project type from the subTitle if possible
-    let projectType = '';
-    if (subTitle.includes('New')) {
-        projectType = 'New';
-    } else if (subTitle.includes('Spotted')) {
-        projectType = 'Spotted';
-    } else if (subTitle.includes('Reviewed')) {
-        projectType = 'Reviewed';
-    } // Add more conditions if there are other types
+        gridItems.forEach(gridItem => {
+            const itemData = extractDataFromGridItem(gridItem);
+            // Check if the logo data already exists to avoid duplicates
+            const isUnique = !logosArray.some(item => item.websiteURL === itemData.websiteURL);
 
-    // Extract date and remove the 'Comments' part
-    let dateText = gridItem.querySelector('h5')?.textContent.trim();
-    const action = dateText.split(' ')[0]; // Assuming the first word is the action
-    dateText = dateText.replace(/Comments.*/, '').trim(); // Removes 'Comments' and anything after it
+            if (isUnique) {
+                logosArray.push(itemData);
+                itemsAdded++;
+            }
+        });
 
-    // Extract comment count
-    const commentCount = gridItem.querySelector('h5 a')?.textContent.match(/\d+/)[0];
+        // Save the updated array back to localStorage
+        localStorage.setItem('logos', JSON.stringify(logosArray));
 
-    // Extract favorite count
-    const favoriteCount = gridItem.querySelector('.favorites_area_archive span')?.textContent.trim();
+        console.log('Updated logos array:', logosArray);
+        console.log('Total items in logos array:', logosArray.length);
+        console.log('Items added from this page:', itemsAdded);
+    }
 
-    return {
-        websiteURL,
-        imageURL,
-        title,
-        subTitle,
-        projectType,
-        action,
-        date: dateText,
-        commentCount,
-        favoriteCount
-    };
-}
+    
+    // Function to extract data from each 'grid-item' element
+    function extractDataFromGridItem(gridItem) {
+        const websiteURL = gridItem.querySelector('a').getAttribute('href');
+        const imageURL = gridItem.querySelector('.lead_image_image').style.backgroundImage.slice(5, -2); // removes 'url("...")' wrapper
+        const title = gridItem.querySelector('.title h1')?.textContent.trim();
+    
+        // Extract and clean subTitle (remove unwanted characters like '\n' and numbers at the end)
+        let subTitle = gridItem.querySelector('.title h2')?.textContent.trim();
+        subTitle = subTitle.replace(/[\n\d]+$/, '').trim(); // Removes newline and trailing numbers
+    
+        // Extract project type from the subTitle if possible
+        let projectType = '';
+        if (subTitle.includes('New')) {
+            projectType = 'New';
+        } else if (subTitle.includes('Spotted')) {
+            projectType = 'Spotted';
+        } else if (subTitle.includes('Reviewed')) {
+            projectType = 'Reviewed';
+        } // Add more conditions if there are other types
+    
+        // Extract date and remove the 'Comments' part
+        let dateText = gridItem.querySelector('h5')?.textContent.trim();
+        const action = dateText.split(' ')[0]; // Assuming the first word is the action
+        dateText = dateText.replace(/Comments.*/, '').trim(); // Removes 'Comments' and anything after it
+    
+        // Extract comment count
+        const commentCount = gridItem.querySelector('h5 a')?.textContent.match(/\d+/)[0];
+    
+        // Extract favorite count
+        const favoriteCount = gridItem.querySelector('.favorites_area_archive span')?.textContent.trim();
+    
+        return {
+            websiteURL,
+            imageURL,
+            title,
+            subTitle,
+            projectType,
+            action,
+            date: dateText,
+            commentCount,
+            favoriteCount
+        };
+    }
 
-// Function to loop through all 'grid-item' elements and extract data
-function extractDataFromPage() {
-    const gridItems = document.querySelectorAll('.grid-item');
-    const data = [];
+    function goToNextPage() {
+        const olderPostsLink = document.querySelector('#pagination a[href*="/page/"]'); // Select the link to older posts
+    
+        if (olderPostsLink) {
+            olderPostsLink.click(); // Click the link if it exists
+            console.log('Navigating to the next page.');
+        } else {
+            console.log('No more pages to navigate to.');
+        }
+    }
 
-    gridItems.forEach(gridItem => {
-        const itemData = extractDataFromGridItem(gridItem);
-        data.push(itemData);
-    });
+    function processPage() {
+        updateLogosArray();
+        goToNextPage();
+    }
 
-    return data;
-}
+    setTimeout(function() {
+        processPage();
+    }, 2000);
 
-// Example usage
-const extractedData = extractDataFromPage();
-console.log(extractedData);
+})();
+

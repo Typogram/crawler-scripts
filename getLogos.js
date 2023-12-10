@@ -1,10 +1,10 @@
 // ==UserScript==
-// @name         Extract Brand New Archive Data
+// @name         getLogos.js
 // @namespace    http://tampermonkey.net/
 // @version      2023-12-10
 // @description  Automatically extracts and saves logo and branding project data from Brand New's archive pages.
 // @author       You
-// @match        https://www.underconsideration.com/brandnew/*
+// @match        https://www.underconsideration.com/brandnew/archives/category/type/new*
 // @icon         https://www.google.com/s2/favicons?sz=64&domain=underconsideration.com
 // @grant        none
 // ==/UserScript==

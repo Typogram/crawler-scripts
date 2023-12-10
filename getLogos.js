@@ -81,7 +81,7 @@
         } else if (imageTagSrc) {
             imageURL = imageTagSrc;
         }
-        
+
         const websiteURL = gridItem.querySelector('a').getAttribute('href');
         const title = gridItem.querySelector('.title h1')?.textContent.trim();
 
@@ -135,7 +135,7 @@
 
     function processPage() {
         updateLogosArray();
-        // goToNextPage();
+        goToNextPage();
     }
 
     setTimeout(function() {
